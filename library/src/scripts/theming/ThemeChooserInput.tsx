@@ -7,7 +7,7 @@ import { IComboBoxOption } from "@library/features/search/SearchBar";
 import SelectOne, { IMenuPlacement, MenuPlacement } from "@library/forms/select/SelectOne";
 import { t } from "@vanilla/i18n";
 import classNames from "classnames";
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { themeDropDownClasses } from "@library/forms/themeEditor/ThemeDropDown.styles";
 import { ThemeType, useThemeActions } from "@library/theming/ThemeActions";
 import { IThemeInfo } from "@library/theming/CurrentThemeInfo";
@@ -17,73 +17,71 @@ import Loader from "@library/loaders/Loader";
 import { DashboardLabelType } from "@dashboard/forms/DashboardFormLabel";
 import { useFormGroup } from "@dashboard/forms/DashboardFormGroup";
 import { useSubcommunities } from "@subcommunities/subcommunities/subcommunitySelectors";
-import {DashboardSelect} from "@dashboard/forms/DashboardSelect";
+import { DashboardSelect } from "@dashboard/forms/DashboardSelect";
 
 interface IProps extends IMenuPlacement {
-    value?: number | string | null;
-    initialValue: number| string | null | boolean | undefined;
-    onChange?: (value:  number| string | null | boolean | undefined) => void;
+    value?: string | null;
+    initialValue: string | null;
+    onChange?: (value: string | null) => void;
 }
 
-export function ThemeChooserInput(props: IProps) {
-    const [ownValue, setOwnValue] = useState<number | string | null |undefined>(
-        typeof props.initialValue === "boolean" ? null : props.initialValue
-    )
-    const setValue = props.onChange ?? setOwnValue;
-
-    const value = props.value ?? ownValue;
+const themeGroupOptions = () => {
     const themeSettingsState = useThemeSettingsState();
     const actions = useThemeActions();
-
-    useEffect(() => {
-        if (themeSettingsState.themes.status === LoadStatus.PENDING) {
-            actions.getAllThemes();
-        }
-    });
-
+    if (themeSettingsState.themes.status === LoadStatus.PENDING) {
+        actions.getAllThemes();
+    }
     if (!themeSettingsState.themes.data || themeSettingsState.themes.status === LoadStatus.LOADING) {
         return <Loader />;
     }
 
     const { templates, themes } = themeSettingsState.themes.data;
+    let dbThemeGroupOptions: IComboBoxOption[] = [];
+    let templateThemeGroupOptions: IComboBoxOption[] = [];
 
-    const dbThemeGroupOptions: IComboBoxOption[] = themes.map(function(theme, index) {
+    dbThemeGroupOptions = themes.map(function(theme, index) {
         return {
             value: theme.themeID,
             label: theme.name,
         };
     });
 
-    const templateThemeGroupOptions: IComboBoxOption[] = templates.map(function(template, index) {
+    templateThemeGroupOptions = templates.map(function(template, index) {
         return {
             value: template.themeID,
             label: template.name,
         };
     });
 
-    const themeGroupOptions: IComboBoxOption[] = [...dbThemeGroupOptions, ...templateThemeGroupOptions];
+    return [...dbThemeGroupOptions, ...templateThemeGroupOptions] as IComboBoxOption[];
+};
+export function ThemeChooserInput(props: IProps) {
+    const [ownValue, setOwnValue] = useState(props.initialValue);
+    const setValue = props.onChange ?? setOwnValue;
 
+    const currentValue = props.value ?? ownValue;
+    let options;
 
-    const selectedTheme = themeGroupOptions.find(option => {
-            if (option.value === props.initialValue?.toString()) {
-                return {
-                    label: option.label,
-                    value: option.value
+    useEffect(() => {
+        options = themeGroupOptions();
+        if (ownValue === null) {
+            options.find(option => {
+                if (option.value === props.initialValue?.toString()) {
+                    setOwnValue(option.value);
                 }
-            }
-
-            return undefined;
-        });
+            });
+        }
+    });
 
     return (
         <>
-                <DashboardSelect
-                    options={themeGroupOptions}
-                    onChange={value => {
-                        setValue(value ? value.value : null);
-                    }}
-                    value={selectedTheme}
-                />
+            <DashboardSelect
+                options={options}
+                onChange={newValue => {
+                    setValue(newValue?.value ? newValue.value.toString() : null);
+                }}
+                value={themeGroupOptions[currentValue ? currentValue.toString() : 0]}
+            />
         </>
     );
 }
