@@ -69,13 +69,13 @@ export const newPostMenuClasses = useThemeCache(() => {
 
     const toggle = style("toggle", {
         display: "flex",
-        ...shadowHelper().dropDown(),
         alignItems: "center",
         justifyItems: "center",
         borderRadius: "50%",
         height: unit(vars.toggle.size),
         width: unit(vars.toggle.size),
         backgroundColor: colorOut(globalVars.mainColors.primary),
+        ...shadowHelper().newPostButton(),
         $nest: {
             [`& .${isOpen} .${iconClasses().newPostMenuIcon}`]: {
                 transform: translateX(vars.toggle.on.rotation),

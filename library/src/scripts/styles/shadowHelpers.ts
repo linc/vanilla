@@ -55,7 +55,15 @@ export const shadowVariables = useThemeCache(() => {
         opacity: 0.5,
     });
 
-    return { widget, widgetHover, dropDown, modal };
+    const newPostButton: IShadowSizing = makeVariables("newPostButton", {
+        horizontalOffset: 0,
+        verticalOffset: 5,
+        blur: 6,
+        spread: 0,
+        opacity: 1,
+    });
+
+    return { widget, widgetHover, dropDown, modal, newPostButton };
 });
 
 export const shadowHelper = useThemeCache(() => {
@@ -93,9 +101,23 @@ export const shadowHelper = useThemeCache(() => {
     const modal = (baseColor: ColorHelper = shadowBaseColor) => {
         const { verticalOffset, horizontalOffset, blur, spread, opacity } = vars.modal;
         return {
-            boxShadow: `${horizontalOffset} ${unit(verticalOffset)} ${unit(blur)} ${unit(spread)} ${baseColor.fade(
-                opacity,
-            )}`,
+            boxShadow: `${unit(horizontalOffset)} ${unit(verticalOffset)} ${unit(blur)} ${unit(
+                spread,
+            )} ${baseColor.fade(opacity)}`,
+        };
+    };
+
+    const newPostButton = (props?: { baseColor?: ColorHelper; verticalOffset?: number; horizontalOffset?: number }) => {
+        const {
+            baseColor = shadowBaseColor,
+            verticalOffset = vars.newPostButton.verticalOffset,
+            horizontalOffset = vars.newPostButton.horizontalOffset,
+        } = props || {};
+        const { blur, spread, opacity } = vars.newPostButton;
+        return {
+            boxShadow: `${unit(horizontalOffset)} ${unit(verticalOffset)} ${unit(blur)} ${unit(
+                spread,
+            )} ${baseColor.fade(opacity)}`,
         };
     };
 
@@ -120,7 +142,7 @@ export const shadowHelper = useThemeCache(() => {
         };
     };
 
-    return { embed, embedHover, dropDown, modal, contrast, makeShadow };
+    return { embed, embedHover, dropDown, modal, contrast, makeShadow, newPostButton };
 });
 
 export const shadowOrBorderBasedOnLightness = (
