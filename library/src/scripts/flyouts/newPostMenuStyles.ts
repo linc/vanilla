@@ -35,9 +35,19 @@ export const newPostMenuVariables = useThemeCache(() => {
     });
 
     const animation = themeVars("animation", {
+        time: 200,
         twist: {
             deg: 135,
-            time: 200,
+        },
+        on: {
+            state: {
+                scale: 0.95,
+            },
+        },
+        off: {
+            state: {
+                scale: 1.05,
+            },
         },
     });
 
