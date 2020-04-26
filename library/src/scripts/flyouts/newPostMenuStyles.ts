@@ -40,19 +40,19 @@ export const newPostMenuVariables = useThemeCache(() => {
             deg: 135,
         },
         closed: {
-            state: {
-                scale: 1.1,
+            scale: 1.08,
+            shadow: {
                 horizontalOffset: 0,
-                verticalOffset: 0,
-                blur: 0,
+                verticalOffset: 1,
+                blur: 3,
                 spread: 0,
                 opacity: 1,
             },
         },
         open: {
-            state: {
+            scale: 1,
+            shadow: {
                 ...shadowVariables().newPostButton,
-                scale: 0.95,
             },
         },
     });
@@ -74,6 +74,8 @@ export const newPostMenuClasses = useThemeCache(() => {
         position: "fixed",
         bottom: unit(vars.position.bottom),
         right: unit(vars.position.right),
+        height: unit(vars.toggle.size),
+        width: unit(vars.toggle.size),
     });
 
     const isOpen = style("isOpen", {});
@@ -116,9 +118,10 @@ export const newPostMenuClasses = useThemeCache(() => {
         justifyContent: "flex-end",
     });
 
-    const animationWrapperIcon = style("animationWrapperIcon", {
+    const animationWrapper = style("animationWrapperIcon", {
         ...absolutePosition.fullSizeOfParent(),
         ...flexHelper().middle(),
+        borderRadius: "50%",
     });
 
     return {
@@ -129,6 +132,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         toggle,
         label,
         menu,
-        animationWrapperIcon,
+        animationWrapper,
     };
 });

@@ -9,9 +9,9 @@ import { newPostMenuClasses, newPostMenuVariables } from "@library/flyouts/newPo
 import { useSpring, animated } from "react-spring";
 import { Spring } from "react-spring/renderprops";
 import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
-import { deg, rotate, scale } from "csx";
+import { ColorHelper, deg, rotate, scale, translate } from "csx";
 import * as easings from "d3-ease";
-import { unit } from "@library/styles/styleHelpers";
+import { negativeUnit, unit } from "@library/styles/styleHelpers";
 
 export enum PostTypes {
     LINK = "link",
@@ -69,8 +69,9 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
     const [open, setOpen] = useState(false);
     const [hover, setHover] = useState(false);
     const [focus, setFocus] = useState(false);
-
     const animationVars = newPostMenuVariables().animation;
+    const animationConfig = { duration: animationVars.time, easing: easings.easeQuadOut };
+
     const shadowVars = shadowVariables().newPostButton;
     const classes = newPostMenuClasses();
 
@@ -78,21 +79,21 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
         size: 1,
     }));
 
-    const [{ horizontalOffset, verticalOffset, blur, spread }, setShadow] = useSpring(() => ({
-        horizontalOffset: shadowVars.horizontalOffset,
-        verticalOffset: shadowVars.verticalOffset,
-        blur: shadowVars.blur,
-        spread: shadowVars.spread,
-    }));
+    // const [{ horizontalOffset, verticalOffset, blur, spread }, setShadow] = useSpring(() => ({
+    //     horizontalOffset: shadowVars.horizontalOffset,
+    //     verticalOffset: shadowVars.verticalOffset,
+    //     blur: shadowVars.blur,
+    //     spread: shadowVars.spread,
+    // }));
 
     const icon = (
         <Spring
             to={{ transform: !open ? rotate("0deg") : rotate(deg(animationVars.twist.deg)) }}
-            config={{ duration: animationVars.time, easing: easings.easeQuadOut }}
+            config={animationConfig}
         >
             {transform => {
                 return (
-                    <animated.span className={classes.animationWrapperIcon} style={transform}>
+                    <animated.span className={classes.animationWrapper} style={transform}>
                         <NewPostMenuIcon />
                     </animated.span>
                 );
@@ -102,61 +103,87 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
 
     useEffect(() => {
         setSize({
-            size: hover ? 1 : open ? animationVars.open.state.scale : animationVars.closed.state.scale,
+            size: hover ? 1 : open ? animationVars.open.scale : animationVars.closed.scale,
         });
-        setShadow({
-            horizontalOffset: open
-                ? animationVars.open.state.horizontalOffset
-                : animationVars.closed.state.horizontalOffset,
-            verticalOffset: open ? animationVars.open.state.verticalOffset : animationVars.closed.state.verticalOffset,
-            blur: open ? animationVars.open.state.blur : animationVars.closed.state.blur,
-            spread: open ? animationVars.open.state.spread : animationVars.closed.state.spread,
-        });
+        // setShadow({
+        //     horizontalOffset: open
+        //         ? animationVars.open.horizontalOffset
+        //         : animationVars.closed.horizontalOffset,
+        //     verticalOffset: open ? animationVars.open.verticalOffset : animationVars.closed.verticalOffset,
+        //     blur: open ? animationVars.open.blur : animationVars.closed.blur,
+        //     spread: open ? animationVars.open.spread : animationVars.closed.spread,
+        // });
     }, [open, hover]);
 
     return (
         <div className={classNames(classes.root)}>
             <Spring
                 to={{
-                    transform: scale(size.value),
-                    horizontalOffset: horizontalOffset.value,
-                    verticalOffset: verticalOffset.value,
-                    blur: blur.value,
-                    spread: spread.value,
+                    scale: scale(size.value),
+                    // horizontalOffset: horizontalOffset.value,
+                    // verticalOffset: verticalOffset.value,
+                    // blur: blur.value,
+                    // spread: spread.value,
                 }}
-                config={{ duration: animationVars.time, easing: easings.easeQuadOut }}
+                config={animationConfig}
             >
-                {toggleAnimationProps => {
-                    const styles = {
-                        ...shadowHelper().newPostButton({
-                            horizontalOffset: toggleAnimationProps.horizontalOffset,
-                            verticalOffset: toggleAnimationProps.verticalOffset,
-                            blur: toggleAnimationProps.blur,
-                            spread: toggleAnimationProps.spread,
-                        }),
-                        transform: toggleAnimationProps.transform,
-                    };
-
+                {scaleProps => {
                     return (
                         <>
-                            <Button
-                                baseClass={ButtonTypes.CUSTOM}
-                                onClick={() => {
-                                    setOpen(!open);
-                                }}
-                                className={classNames(classes.toggle, {
-                                    [classes.isOpen]: open,
-                                })}
-                                style={styles}
-                                onMouseEnter={() => {
-                                    setHover(true);
-                                }}
-                                onMouseLeave={() => {
-                                    setHover(false);
-                                }}
+                            <Spring
+                                to={
+                                    !open
+                                        ? {
+                                              ...animationVars.open.shadow,
+                                              x: negativeUnit(shadowVariables().newPostButton.horizontalOffset),
+                                              y: negativeUnit(shadowVariables().newPostButton.verticalOffset),
+                                          }
+                                        : {
+                                              ...animationVars.closed.shadow,
+                                              x: unit(0),
+                                              y: unit(0),
+                                          }
+                                }
+                                config={animationConfig}
                             >
-                                {icon}
-                            </Button>
+                                {shadowProps => {
+                                    return (
+                                        <animated.span
+                                            className={classes.animationWrapper}
+                                            style={{
+                                                transform: `${translate(shadowProps.x, shadowProps.y)} ${
+                                                    scaleProps.scale
+                                                }`,
+                                                ...shadowHelper().newPostButton({
+                                                    verticalOffset: shadowProps.verticalOffset,
+                                                    horizontalOffset: shadowProps.horizontalOffset,
+                                                    blur: shadowProps.blur,
+                                                    spread: shadowProps.spread,
+                                                    opacity: shadowProps.opacity,
+                                                }),
+                                            }}
+                                        >
+                                            <Button
+                                                baseClass={ButtonTypes.CUSTOM}
+                                                onClick={() => {
+                                                    setOpen(!open);
+                                                }}
+                                                className={classNames(classes.toggle, {
+                                                    [classes.isOpen]: open,
+                                                })}
+                                                onMouseEnter={() => {
+                                                    setHover(true);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    setHover(false);
+                                                }}
+                                            >
+                                                {icon}
+                                            </Button>
+                                        </animated.span>
+                                    );
+                                }}
+                            </Spring>
                             {open && <NewPostMenuItems {...props} />}
                         </>
                     );
