@@ -3,7 +3,7 @@ import { styleFactory, useThemeCache, variableFactory } from "@library/styles/st
 import { unit, colorOut, absolutePosition, negativeUnit, flexHelper } from "@library/styles/styleHelpers";
 import { iconClasses } from "@library/icons/iconStyles";
 import { translateX } from "csx";
-import { shadowHelper } from "@library/styles/shadowHelpers";
+import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 
 export const newPostMenuVariables = useThemeCache(() => {
     const globalVars = globalVariables();
@@ -39,14 +39,20 @@ export const newPostMenuVariables = useThemeCache(() => {
         twist: {
             deg: 135,
         },
-        on: {
+        closed: {
             state: {
-                scale: 0.95,
+                scale: 1.1,
+                horizontalOffset: 0,
+                verticalOffset: 0,
+                blur: 0,
+                spread: 0,
+                opacity: 1,
             },
         },
-        off: {
+        open: {
             state: {
-                scale: 1.05,
+                ...shadowVariables().newPostButton,
+                scale: 0.95,
             },
         },
     });

@@ -11,6 +11,7 @@ import { Spring } from "react-spring/renderprops";
 import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 import { deg, rotate, scale } from "csx";
 import * as easings from "d3-ease";
+import { unit } from "@library/styles/styleHelpers";
 
 export enum PostTypes {
     LINK = "link",
@@ -73,12 +74,15 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
     const shadowVars = shadowVariables().newPostButton;
     const classes = newPostMenuClasses();
 
-    const [{ horizontalOffset, verticalOffset, blur, spread, size }, set] = useSpring(() => ({
+    const [{ size }, setSize] = useSpring(() => ({
+        size: 1,
+    }));
+
+    const [{ horizontalOffset, verticalOffset, blur, spread }, setShadow] = useSpring(() => ({
         horizontalOffset: shadowVars.horizontalOffset,
         verticalOffset: shadowVars.verticalOffset,
         blur: shadowVars.blur,
         spread: shadowVars.spread,
-        size: 1,
     }));
 
     const icon = (
@@ -97,29 +101,40 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
     );
 
     useEffect(() => {
-        const openState = hover ? 1 : animationVars.on.state.scale;
-        const closedState = hover ? 1 : animationVars.off.state.scale;
-        const size = open ? openState : closedState;
-        set({
-            size,
+        setSize({
+            size: hover ? 1 : open ? animationVars.open.state.scale : animationVars.closed.state.scale,
+        });
+        setShadow({
+            horizontalOffset: open
+                ? animationVars.open.state.horizontalOffset
+                : animationVars.closed.state.horizontalOffset,
+            verticalOffset: open ? animationVars.open.state.verticalOffset : animationVars.closed.state.verticalOffset,
+            blur: open ? animationVars.open.state.blur : animationVars.closed.state.blur,
+            spread: open ? animationVars.open.state.spread : animationVars.closed.state.spread,
         });
     }, [open, hover]);
 
     return (
         <div className={classNames(classes.root)}>
             <Spring
-                to={{ transform: scale(size.value) }}
+                to={{
+                    transform: scale(size.value),
+                    horizontalOffset: horizontalOffset.value,
+                    verticalOffset: verticalOffset.value,
+                    blur: blur.value,
+                    spread: spread.value,
+                }}
                 config={{ duration: animationVars.time, easing: easings.easeQuadOut }}
             >
-                {props => {
+                {toggleAnimationProps => {
                     const styles = {
                         ...shadowHelper().newPostButton({
-                            horizontalOffset: horizontalOffset.value,
-                            verticalOffset: verticalOffset.value,
-                            blur: blur.value,
-                            spread: spread.value,
+                            horizontalOffset: toggleAnimationProps.horizontalOffset,
+                            verticalOffset: toggleAnimationProps.verticalOffset,
+                            blur: toggleAnimationProps.blur,
+                            spread: toggleAnimationProps.spread,
                         }),
-                        transform: props.transform,
+                        transform: toggleAnimationProps.transform,
                     };
 
                     return (
