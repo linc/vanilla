@@ -1,6 +1,6 @@
 import { globalVariables } from "@library/styles/globalStyleVars";
 import { styleFactory, useThemeCache, variableFactory } from "@library/styles/styleUtils";
-import { unit, colorOut, absolutePosition, negativeUnit } from "@library/styles/styleHelpers";
+import { unit, colorOut, absolutePosition, negativeUnit, flexHelper } from "@library/styles/styleHelpers";
 import { iconClasses } from "@library/icons/iconStyles";
 import { translateX } from "csx";
 import { shadowHelper } from "@library/styles/shadowHelpers";
@@ -34,10 +34,18 @@ export const newPostMenuVariables = useThemeCache(() => {
         },
     });
 
+    const animation = themeVars("animation", {
+        twist: {
+            deg: 135,
+            time: 200,
+        },
+    });
+
     return {
         position,
         item,
         toggle,
+        animation,
     };
 });
 
@@ -75,7 +83,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         height: unit(vars.toggle.size),
         width: unit(vars.toggle.size),
         backgroundColor: colorOut(globalVars.mainColors.primary),
-        ...shadowHelper().newPostButton(),
         $nest: {
             [`& .${isOpen} .${iconClasses().newPostMenuIcon}`]: {
                 transform: translateX(vars.toggle.on.rotation),
@@ -93,6 +100,11 @@ export const newPostMenuClasses = useThemeCache(() => {
         justifyContent: "flex-end",
     });
 
+    const animationWrapperIcon = style("animationWrapperIcon", {
+        ...absolutePosition.fullSizeOfParent(),
+        ...flexHelper().middle(),
+    });
+
     return {
         root,
         item,
@@ -101,5 +113,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         toggle,
         label,
         menu,
+        animationWrapperIcon,
     };
 });

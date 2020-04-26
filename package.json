@@ -28,6 +28,7 @@
         "axios": "0.18.1",
         "classnames": "2.2.6",
         "csx": "9.0.0",
+        "d3-ease": "^1.0.6",
         "emojibase-data": "3.2.1",
         "formik": "^2.1.4",
         "highlight.js": "9.15.6",

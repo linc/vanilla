@@ -4,11 +4,12 @@
  * @license GPL-2.0-only
  */
 
-import React from "react";
+import React, { CSSProperties } from "react";
 import classNames from "classnames";
 import { t } from "@library/utility/appUtils";
 import { iconClasses } from "@library/icons/iconStyles";
 import { areaHiddenType } from "@library/styles/styleHelpersVisibility";
+import { NestedCSSProperties } from "typestyle/lib/types";
 
 const currentColorFill = {
     fill: "currentColor",
@@ -891,13 +892,14 @@ export function BookmarkIcon(props: { className?: string; "aria-hidden"?: areaHi
     );
 }
 
-export function NewPostMenuIcon(props: { className?: string; "aria-hidden"?: areaHiddenType }) {
+export function NewPostMenuIcon(props: { className?: string; "aria-hidden"?: areaHiddenType; style?: CSSProperties }) {
     return (
         <svg
             className={classNames(iconClasses().newPostMenuIcon, props.className)}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
             aria-hidden={props["aria-hidden"] !== undefined ? props["aria-hidden"] : "true"}
+            style={props.style}
         >
             <title>{t("New Post")}</title>
             <path

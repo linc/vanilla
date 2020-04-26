@@ -107,13 +107,23 @@ export const shadowHelper = useThemeCache(() => {
         };
     };
 
-    const newPostButton = (props?: { baseColor?: ColorHelper; verticalOffset?: number; horizontalOffset?: number }) => {
+    const newPostButton = (props?: {
+        baseColor?: ColorHelper;
+        verticalOffset?: number;
+        horizontalOffset?: number;
+        blur?: number;
+        spread?: number;
+        opacity?: number;
+    }) => {
         const {
             baseColor = shadowBaseColor,
             verticalOffset = vars.newPostButton.verticalOffset,
             horizontalOffset = vars.newPostButton.horizontalOffset,
+            blur = vars.newPostButton.blur,
+            spread = vars.newPostButton.spread,
+            opacity = vars.newPostButton.opacity,
         } = props || {};
-        const { blur, spread, opacity } = vars.newPostButton;
+
         return {
             boxShadow: `${unit(horizontalOffset)} ${unit(verticalOffset)} ${unit(blur)} ${unit(
                 spread,
