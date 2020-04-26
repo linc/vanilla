@@ -2,7 +2,7 @@ import { globalVariables } from "@library/styles/globalStyleVars";
 import { styleFactory, useThemeCache, variableFactory } from "@library/styles/styleUtils";
 import { unit, colorOut, absolutePosition, negativeUnit, flexHelper } from "@library/styles/styleHelpers";
 import { iconClasses } from "@library/icons/iconStyles";
-import { translateX } from "csx";
+import { scale, translateX } from "csx";
 import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 
 export const newPostMenuVariables = useThemeCache(() => {
@@ -29,7 +29,7 @@ export const newPostMenuVariables = useThemeCache(() => {
     const toggle = themeVars("toggle", {
         size: 56,
         borderRadius: "50%",
-        on: {
+        open: {
             rotation: `-315deg`,
         },
     });
@@ -39,20 +39,26 @@ export const newPostMenuVariables = useThemeCache(() => {
         twist: {
             deg: 135,
         },
+        state: {
+            // This if from the mouse/keyboard
+            timing: "ease-out",
+            time: 150,
+            scale: 1.1,
+        },
         closed: {
-            scale: 1.08,
+            scale: 1,
+            shadow: {
+                ...shadowVariables().newPostButton,
+            },
+        },
+        open: {
+            scale: 0.95,
             shadow: {
                 horizontalOffset: 0,
                 verticalOffset: 1,
                 blur: 3,
                 spread: 0,
                 opacity: 1,
-            },
-        },
-        open: {
-            scale: 1,
-            shadow: {
-                ...shadowVariables().newPostButton,
             },
         },
     });
@@ -78,6 +84,15 @@ export const newPostMenuClasses = useThemeCache(() => {
         width: unit(vars.toggle.size),
     });
 
+    const domStates = style("domStates", {
+        transition: `transform ${vars.animation.state.time}ms ${vars.animation.state.timing}`,
+        $nest: {
+            [`&:hover, &:focus, &.focus-visible, &:active`]: {
+                transform: scale(vars.animation.state.scale), // This was attempted with React Spring, but the dom events are really flaky in React
+            },
+        },
+    });
+
     const isOpen = style("isOpen", {});
 
     const item = style("item", {
@@ -101,11 +116,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         height: unit(vars.toggle.size),
         width: unit(vars.toggle.size),
         backgroundColor: colorOut(globalVars.mainColors.primary),
-        $nest: {
-            [`& .${isOpen} .${iconClasses().newPostMenuIcon}`]: {
-                transform: translateX(vars.toggle.on.rotation),
-            },
-        },
     });
 
     const label = style("label", {});
@@ -132,6 +142,7 @@ export const newPostMenuClasses = useThemeCache(() => {
         toggle,
         label,
         menu,
+        domStates,
         animationWrapper,
     };
 });
