@@ -3,6 +3,7 @@ import { StoryContent } from "@library/storybook/StoryContent";
 import { StoryHeading } from "@library/storybook/StoryHeading";
 import NewPostMenu, { PostTypes, IAddPost } from "@library/flyouts/NewPostMenu";
 import { NewDiscussionIcon, NewIdeaIcon, NewPollIcon } from "@library/icons/common";
+import NewPostItems from "@library/flyouts/NewPostItems";
 
 export default {
     component: NewPostMenu,
@@ -11,6 +12,7 @@ export default {
 
 const items = [
     {
+        id: "1",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 1");
@@ -19,6 +21,7 @@ const items = [
         label: "New Poll",
     },
     {
+        id: "2",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 2");
@@ -27,6 +30,7 @@ const items = [
         label: "New Idea",
     },
     {
+        id: "3",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 3");
@@ -35,6 +39,7 @@ const items = [
         label: "New Discussion",
     },
     {
+        id: "4",
         type: PostTypes.LINK,
         action: "http://google.ca",
         icon: <NewDiscussionIcon />,
@@ -45,13 +50,20 @@ const items = [
 export const Basic = () => (
     <StoryContent>
         <StoryHeading depth={1}> Basic </StoryHeading>
-        <NewPostMenu items={items as IAddPost[]} />
+        <NewPostMenu items={items} />
     </StoryContent>
 );
 
 export const Empty = () => (
     <StoryContent>
         <StoryHeading depth={1}> Empty </StoryHeading>
-        <NewPostMenu items={[] as IAddPost[]} />
+        <NewPostMenu items={[]} />
+    </StoryContent>
+);
+
+export const Menu = () => (
+    <StoryContent>
+        <StoryHeading depth={1}> Menu </StoryHeading>
+        <NewPostItems items={items} />
     </StoryContent>
 );

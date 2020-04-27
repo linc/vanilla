@@ -12,6 +12,7 @@ import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 import { ColorHelper, deg, rotate, scale, translate } from "csx";
 import * as easings from "d3-ease";
 import { negativeUnit, unit } from "@library/styles/styleHelpers";
+import NewPostItems from "./NewPostItems";
 
 export enum PostTypes {
     LINK = "link",
@@ -24,44 +25,6 @@ export interface IAddPost {
     className?: string;
     label: string;
     icon: JSX.Element;
-}
-
-function ActionItem(props: IAddPost) {
-    const { action, className, type, label, icon } = props;
-    const classes = newPostMenuClasses();
-
-    const contents = (
-        <>
-            {icon}
-            <span className={classes.label}>{label}</span>
-        </>
-    );
-
-    return type === PostTypes.BUTTON ? (
-        <Button onClick={action as () => void} className={classNames(className, classes.action)}>
-            {contents}
-        </Button>
-    ) : (
-        <LinkAsButton to={action as string} className={classNames(className, classes.action)}>
-            {contents}
-        </LinkAsButton>
-    );
-}
-
-export function NewPostMenuItems(props: { items: IAddPost[] | [] }) {
-    const { items } = props;
-
-    if (!items || items.length === 0) {
-        return null;
-    }
-    const classes = newPostMenuClasses();
-    return (
-        <div className={classes.menu}>
-            {(items as []).map((action, i) => {
-                return <ActionItem key={i} {...action} />;
-            })}
-        </div>
-    );
 }
 
 export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
@@ -140,7 +103,7 @@ export default function NewPostMenu(props: { items: IAddPost[] | [] }) {
                     );
                 }}
             </Spring>
-            {open && <NewPostMenuItems {...props} />}
+            {open && <NewPostItems {...props} />}
         </div>
     );
 }
