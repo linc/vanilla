@@ -1,9 +1,9 @@
 import { globalVariables } from "@library/styles/globalStyleVars";
 import { styleFactory, useThemeCache, variableFactory } from "@library/styles/styleUtils";
-import { unit, colorOut, absolutePosition, negativeUnit } from "@library/styles/styleHelpers";
+import { unit, colorOut, absolutePosition, negativeUnit, paddings } from "@library/styles/styleHelpers";
 import { iconClasses } from "@library/icons/iconStyles";
-import { translateX } from "csx";
-import { shadowHelper } from "@library/styles/shadowHelpers";
+import { percent, translateX } from "csx";
+import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 import { relative } from "path";
 
 export const newPostMenuVariables = useThemeCache(() => {
@@ -25,7 +25,8 @@ export const newPostMenuVariables = useThemeCache(() => {
     const action = themeVars("action", {
         borderRadius: 21.5,
         padding: {
-            horizontal: 18,
+            right: 18,
+            left: 14,
         },
         size: {
             height: 44,
@@ -48,12 +49,17 @@ export const newPostMenuVariables = useThemeCache(() => {
         },
     });
 
+    const items = themeVars("items", {
+        offset: 25,
+    });
+
     return {
         position,
         item,
         action,
         toggle,
         label,
+        items,
     };
 });
 
@@ -66,32 +72,12 @@ export const newPostMenuClasses = useThemeCache(() => {
         position: "fixed",
         bottom: unit(vars.position.bottom),
         right: unit(vars.position.right),
-        textAlign: "right",
+        width: unit(vars.toggle.size),
+        height: unit(vars.toggle.size),
     });
 
     const isOpen = style("isOpen", {
         transform: `rotate(${vars.toggle.on.rotation})`,
-    });
-
-    const item = style("item", {
-        marginTop: unit(vars.item.position.top),
-        marginRight: unit(vars.item.position.right),
-    });
-
-    const action = style("action", {
-        borderRadius: unit(vars.action.borderRadius),
-        ...shadowHelper().dropDown(),
-        height: unit(vars.action.size.height),
-        backgroundColor: colorOut(globalVars.mainColors.bg),
-        paddingLeft: unit(vars.action.padding.horizontal),
-        paddingRight: unit(vars.action.padding.horizontal),
-        display: "inline-flex",
-        alignItems: "center",
-        $nest: {
-            "&:hover": {
-                backgroundColor: colorOut(globalVars.mainColors.primary),
-            },
-        },
     });
 
     const toggle = style("toggle", {
@@ -116,6 +102,40 @@ export const newPostMenuClasses = useThemeCache(() => {
         display: "inline-block",
     });
 
+    const items = style("items", {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        justifyContent: "flex-end",
+        position: "fixed",
+        bottom: unit(
+            vars.position.bottom +
+                vars.toggle.size +
+                shadowVariables().newPostButton.verticalOffset +
+                vars.items.offset,
+        ),
+        right: unit(vars.position.right),
+    });
+
+    const item = style("item", {
+        marginTop: unit(vars.item.position.top),
+    });
+
+    const action = style("action", {
+        borderRadius: unit(vars.action.borderRadius),
+        ...shadowHelper().dropDown(),
+        height: unit(vars.action.size.height),
+        backgroundColor: colorOut(globalVars.mainColors.bg),
+        ...paddings(vars.action.padding),
+        display: "inline-flex",
+        alignItems: "center",
+        $nest: {
+            "&:hover": {
+                backgroundColor: colorOut(globalVars.mainColors.primary),
+            },
+        },
+    });
+
     return {
         root,
         item,
@@ -123,5 +143,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         isOpen,
         toggle,
         label,
+        items,
     };
 });

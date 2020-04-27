@@ -4,10 +4,12 @@ import classNames from "classnames";
 import LinkAsButton from "@library/routing/LinkAsButton";
 import Button from "@library/forms/Button";
 import { ButtonTypes } from "@library/forms/buttonTypes";
-import { PostTypes, ITransition, IAddPost } from "./NewPostMenu";
+import { PostTypes, IAddPost } from "./NewPostMenu";
 import { newPostMenuClasses } from "@library/flyouts/newPostItemsStyles";
 
-export default function NewPostItem({ item, style }: { item: IAddPost; style: ITransition }) {
+//style: ITransition
+
+export default function NewPostItem({ item }: { item: IAddPost;  }) {
     const { action, className, type, label, icon } = item;
     const classes = newPostMenuClasses();
 
@@ -19,7 +21,7 @@ export default function NewPostItem({ item, style }: { item: IAddPost; style: IT
     );
 
     return (
-        <div style={style} className={classNames(classes.item)}>
+        <div className={classNames(classes.item)}>
             {type === PostTypes.BUTTON ? (
                 <Button
                     baseClass={ButtonTypes.CUSTOM}

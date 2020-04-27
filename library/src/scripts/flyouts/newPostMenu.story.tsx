@@ -12,7 +12,6 @@ export default {
 
 const items = [
     {
-        id: "1",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 1");
@@ -21,7 +20,6 @@ const items = [
         label: "New Poll",
     },
     {
-        id: "2",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 2");
@@ -30,7 +28,6 @@ const items = [
         label: "New Idea",
     },
     {
-        id: "3",
         type: PostTypes.BUTTON,
         action: () => {
             alert("hello! 3");
@@ -39,7 +36,6 @@ const items = [
         label: "New Discussion",
     },
     {
-        id: "4",
         type: PostTypes.LINK,
         action: "http://google.ca",
         icon: <NewDiscussionIcon />,
