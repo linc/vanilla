@@ -39,12 +39,6 @@ export const newPostMenuVariables = useThemeCache(() => {
         twist: {
             deg: 135,
         },
-        state: {
-            // This if from the mouse/keyboard
-            timing: "ease-out",
-            time: 150,
-            scale: 1.1,
-        },
         closed: {
             scale: 1,
             shadow: {
@@ -84,14 +78,7 @@ export const newPostMenuClasses = useThemeCache(() => {
         width: unit(vars.toggle.size),
     });
 
-    const domStates = style("domStates", {
-        transition: `transform ${vars.animation.state.time}ms ${vars.animation.state.timing}`,
-        $nest: {
-            [`&:hover, &:focus, &.focus-visible, &:active`]: {
-                transform: scale(vars.animation.state.scale), // This was attempted with React Spring, but the dom events are really flaky in React
-            },
-        },
-    });
+    const domStates = style("domStates", {});
 
     const isOpen = style("isOpen", {});
 
