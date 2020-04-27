@@ -7,6 +7,7 @@ import NewPostItem from "./NewPostItem";
 import Modal from "@library/modal/Modal";
 import ModalSizes from "@library/modal/ModalSizes";
 import SiteNavProvider from "@library/navigation/SiteNavContext";
+import {useSpring} from "react-spring";
 
 export enum PostTypes {
     LINK = "link",
@@ -28,26 +29,16 @@ export interface ITransition {
 export default function NewPostItems(props: { items: IAddPost[] }) {
     const classes = newPostMenuClasses();
     const { items, } = props;
-
     return (
-
-            <>
-                {/*<div className={classes.items}>*/}
-                {/*    {items.map( item => {*/}
-                {/*        return <NewPostItem item={item}/>;*/}
-                {/*    })}*/}
-                {/*</div>*/}
-
-
-
+            <div className={classes.items}>
                 <Trail
                     config={{ mass: 2, tension: 3000, friction: 150 }}
                     items={items}
                     from={{ opacity: 0, transform: "translate3d(0, 100%, 0)" }}
                     to={{ opacity: 1, transform: "translate3d(0, 0, 0)" }}
                 >
-                    {item => (props) => <NewPostItem item={item} style={props} />}
+                    {item => props => <NewPostItem item={item} />}
                 </Trail>
-            </>
+            </div>
     );
 }
