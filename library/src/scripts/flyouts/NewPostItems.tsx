@@ -2,11 +2,10 @@ import React, { ReactNode, useState } from "react";
 import classNames from "classnames";
 
 import { newPostMenuClasses } from "@library/flyouts/newPostItemsStyles";
-import {Spring, Trail} from "react-spring/renderprops";
+import { Spring, Trail } from "react-spring/renderprops";
 import NewPostItem from "./NewPostItem";
 import ReactDOM from "react-dom";
-import {DocumentationIcon} from "@library/icons/common";
-
+import { DocumentationIcon } from "@library/icons/common";
 
 export enum PostTypes {
     LINK = "link",
@@ -26,11 +25,13 @@ export interface ITransition {
     transform: string;
 }
 
-export default function NewPostItems(props: { open: boolean, items: IAddPost[], firstRun: boolean, exitHandler?: () => void }) {
-    const { open, items, exitHandler } = props;
-    if (props.firstRun) {
-        return null;
-    }
+export default function NewPostItems(props: {
+    open: boolean;
+    items: IAddPost[];
+    firstRun: boolean;
+    exitHandler?: () => void;
+}) {
+    const { open, items, exitHandler, firstRun } = props;
     const classes = newPostMenuClasses();
 
     // Generate keys for Trail, as it does render them on the fly correctly
@@ -41,10 +42,12 @@ export default function NewPostItems(props: { open: boolean, items: IAddPost[], 
     const transitionState = "translate3d(0, 100%, 0)";
     const restState = "translate3d(0, 0, 0)";
 
-    const from = {
-        opacity: open ? 0 : 1,
-        transform: open ? transitionState : restState,
-    };
+    const from = firstRun
+        ? undefined
+        : {
+              opacity: open ? 0 : 1,
+              transform: open ? transitionState : restState,
+          };
 
     const to = {
         opacity: !open ? 0 : 1,
@@ -53,15 +56,14 @@ export default function NewPostItems(props: { open: boolean, items: IAddPost[], 
 
     return (
         <div className={classes.items}>
-            <Trail items={items}
-                   config={{ mass: 2, tension: 3000, friction: 150 }}
-                   from={from}
-                   to={to}
-                   keys={item => item.key}
+            <Trail
+                items={items}
+                config={{ mass: 2, tension: 3000, friction: 150 }}
+                from={from}
+                to={to}
+                keys={item => item.key}
             >
-                {(item) => animatedProps => (
-                    <NewPostItem style={animatedProps} item={item} exitHandler={exitHandler}/>
-                )}
+                {item => animatedProps => <NewPostItem style={animatedProps} item={item} exitHandler={exitHandler} />}
             </Trail>
         </div>
     );

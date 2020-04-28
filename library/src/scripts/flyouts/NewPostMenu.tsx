@@ -14,7 +14,6 @@ import * as easings from "d3-ease";
 import { negativeUnit, unit } from "@library/styles/styleHelpers";
 import NewPostItems from "./NewPostItems";
 
-
 export enum PostTypes {
     LINK = "link",
     BUTTON = "button",
@@ -54,7 +53,14 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
 
     return (
         <>
-            <NewPostItems items={props.items} open={open} firstRun={firstRun} exitHandler={() => { setOpen(false) }} />
+            <NewPostItems
+                items={props.items}
+                open={open}
+                firstRun={firstRun}
+                exitHandler={() => {
+                    setOpen(false);
+                }}
+            />
             <div className={classNames(classes.root)}>
                 <Spring
                     to={
@@ -76,7 +82,9 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
                 >
                     {animationProps => {
                         const animatedStyles = {
-                            transform: `${translate(animationProps.x, animationProps.y)} ${scale(animationProps.scale)}`,
+                            transform: `${translate(animationProps.x, animationProps.y)} ${scale(
+                                animationProps.scale,
+                            )}`,
                             ...shadowHelper().newPostButton({
                                 verticalOffset: animationProps.verticalOffset,
                                 horizontalOffset: animationProps.horizontalOffset,
@@ -106,7 +114,6 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
                     }}
                 </Spring>
             </div>
-
         </>
     );
 }
