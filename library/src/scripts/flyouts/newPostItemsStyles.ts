@@ -103,19 +103,22 @@ export const newPostMenuClasses = useThemeCache(() => {
         display: "inline-block",
     });
 
+    // For animation purposes;
+    const itemsWrapper = style("itemsWrapper", {
+        overflow: "hidden",
+        position: "fixed",
+        background: "pink",
+        right: unit(vars.position.right),
+        bottom: unit(vars.position.bottom + vars.toggle.size / 2),
+        paddingBottom: unit(vars.toggle.size / 2 + shadowVariables().newPostButton.verticalOffset + vars.items.offset),
+    });
+
     const items = style("items", {
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-end",
         justifyContent: "flex-end",
-        position: "fixed",
-        bottom: unit(
-            vars.position.bottom +
-                vars.toggle.size +
-                shadowVariables().newPostButton.verticalOffset +
-                vars.items.offset,
-        ),
-        right: unit(vars.position.right),
+        background: "orange",
     });
 
     const item = style("item", {
@@ -133,6 +136,8 @@ export const newPostMenuClasses = useThemeCache(() => {
         ...clickableItemStates(),
     });
 
+    const itemLabelAnimation = style("itemLabelAnimation", {});
+
     return {
         root,
         item,
@@ -141,5 +146,7 @@ export const newPostMenuClasses = useThemeCache(() => {
         toggle,
         label,
         items,
+        itemsWrapper,
+        itemLabelAnimation,
     };
 });

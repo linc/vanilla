@@ -10,7 +10,7 @@ import { useSpring, animated } from "react-spring";
 import { Spring } from "react-spring/renderprops";
 import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 import { ColorHelper, deg, rotate, scale, translate } from "csx";
-import * as easings from "d3-ease";
+import { easeQuadOut } from "d3-ease";
 import { negativeUnit, unit } from "@library/styles/styleHelpers";
 import NewPostItems from "./NewPostItems";
 
@@ -32,7 +32,7 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
     const [open, setOpen] = useState(false);
     const [firstRun, setFirstRun] = useState(true);
     const animationVars = newPostMenuVariables().animation;
-    const animationConfig = { duration: animationVars.time, easing: easings.easeQuadOut };
+    const animationConfig = { duration: animationVars.time, easing: easeQuadOut };
 
     const shadowVars = shadowVariables().newPostButton;
     const classes = newPostMenuClasses();

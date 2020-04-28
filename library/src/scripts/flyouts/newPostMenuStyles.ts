@@ -107,14 +107,6 @@ export const newPostMenuClasses = useThemeCache(() => {
 
     const label = style("label", {});
 
-    const menu = style("menu", {
-        ...absolutePosition.bottomRight("100%"),
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        justifyContent: "flex-end",
-    });
-
     const animationWrapper = style("animationWrapperIcon", {
         ...absolutePosition.fullSizeOfParent(),
         ...flexHelper().middle(),
@@ -128,7 +120,6 @@ export const newPostMenuClasses = useThemeCache(() => {
         isOpen,
         toggle,
         label,
-        menu,
         domStates,
         animationWrapper,
     };
