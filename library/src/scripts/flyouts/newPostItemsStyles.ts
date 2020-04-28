@@ -125,7 +125,7 @@ export const newPostMenuClasses = useThemeCache(() => {
     const action = style("action", {
         borderRadius: unit(vars.action.borderRadius),
         ...shadowHelper().dropDown(),
-        height: unit(vars.action.size.height),
+        minHeight: unit(vars.action.size.height),
         backgroundColor: colorOut(globalVars.mainColors.bg),
         ...paddings(vars.action.padding),
         display: "inline-flex",
