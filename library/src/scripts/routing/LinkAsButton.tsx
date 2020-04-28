@@ -20,6 +20,7 @@ interface IProps extends IOptionalComponentID, LinkProps {
     ariaLabel?: string;
     baseClass?: ButtonTypes;
     tabIndex?: number;
+    onClick?: () => void;
 }
 
 /**

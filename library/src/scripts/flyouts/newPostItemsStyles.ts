@@ -5,6 +5,7 @@ import { iconClasses } from "@library/icons/iconStyles";
 import { percent, translateX } from "csx";
 import { shadowHelper, shadowVariables } from "@library/styles/shadowHelpers";
 import { relative } from "path";
+import { clickableItemStates } from "@dashboard/compatibilityStyles/clickableItemHelpers";
 
 export const newPostMenuVariables = useThemeCache(() => {
     const globalVars = globalVariables();
@@ -129,11 +130,7 @@ export const newPostMenuClasses = useThemeCache(() => {
         ...paddings(vars.action.padding),
         display: "inline-flex",
         alignItems: "center",
-        $nest: {
-            "&:hover": {
-                backgroundColor: colorOut(globalVars.mainColors.primary),
-            },
-        },
+        ...clickableItemStates(),
     });
 
     return {

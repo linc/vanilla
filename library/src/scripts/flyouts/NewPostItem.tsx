@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, {CSSProperties, ReactNode, useState} from "react";
 import classNames from "classnames";
 
 import LinkAsButton from "@library/routing/LinkAsButton";
@@ -7,10 +7,9 @@ import { ButtonTypes } from "@library/forms/buttonTypes";
 import { PostTypes, IAddPost } from "./NewPostMenu";
 import { newPostMenuClasses } from "@library/flyouts/newPostItemsStyles";
 
-//style: ITransition
-
-export default function NewPostItem({ item }: { item: IAddPost;  }) {
-    const { action, className, type, label, icon } = item;
+export default function NewPostItem(props: { item: IAddPost, style: CSSProperties, exitHandler?: () => void }) {
+    const { action, className, type, label, icon } = props.item;
+    const { style, exitHandler = (() => {}) } = props;
     const classes = newPostMenuClasses();
 
     const contents = (
@@ -26,7 +25,14 @@ export default function NewPostItem({ item }: { item: IAddPost;  }) {
                 <Button
                     baseClass={ButtonTypes.CUSTOM}
                     className={classNames(className, classes.action)}
-                    onClick={action as () => void}
+                    onClick={
+                        () => {
+                            if (typeof action !== "string") {
+                                action();
+                            }
+                            exitHandler();
+                        }}
+                    style={style}
                 >
                     {contents}
                 </Button>
@@ -35,6 +41,8 @@ export default function NewPostItem({ item }: { item: IAddPost;  }) {
                     baseClass={ButtonTypes.CUSTOM}
                     className={classNames(className, classes.action)}
                     to={action as string}
+                    style={style}
+                    onClick={exitHandler}
                 >
                     {contents}
                 </LinkAsButton>

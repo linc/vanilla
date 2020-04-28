@@ -60,6 +60,6 @@ export const Empty = () => (
 export const Menu = () => (
     <StoryContent>
         <StoryHeading depth={1}> Menu </StoryHeading>
-        <NewPostItems items={items} />
+        <NewPostItems items={items} open={true} />
     </StoryContent>
 );

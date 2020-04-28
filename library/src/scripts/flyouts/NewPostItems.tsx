@@ -2,12 +2,11 @@ import React, { ReactNode, useState } from "react";
 import classNames from "classnames";
 
 import { newPostMenuClasses } from "@library/flyouts/newPostItemsStyles";
-import { Trail } from "react-spring/renderprops";
+import {Spring, Trail} from "react-spring/renderprops";
 import NewPostItem from "./NewPostItem";
-import Modal from "@library/modal/Modal";
-import ModalSizes from "@library/modal/ModalSizes";
-import SiteNavProvider from "@library/navigation/SiteNavContext";
-import {useSpring} from "react-spring";
+import ReactDOM from "react-dom";
+import {DocumentationIcon} from "@library/icons/common";
+
 
 export enum PostTypes {
     LINK = "link",
@@ -19,6 +18,7 @@ export interface IAddPost {
     className?: string;
     label: string;
     icon: JSX.Element;
+    id?: string;
 }
 
 export interface ITransition {
@@ -26,19 +26,43 @@ export interface ITransition {
     transform: string;
 }
 
-export default function NewPostItems(props: { items: IAddPost[] }) {
+export default function NewPostItems(props: { open: boolean, items: IAddPost[], firstRun: boolean, exitHandler?: () => void }) {
+    const { open, items, exitHandler } = props;
+    if (props.firstRun) {
+        return null;
+    }
     const classes = newPostMenuClasses();
-    const { items, } = props;
+
+    // Generate keys for Trail, as it does render them on the fly correctly
+    items.forEach((item, i) => {
+        item.key = `${i}`;
+    });
+
+    const transitionState = "translate3d(0, 100%, 0)";
+    const restState = "translate3d(0, 0, 0)";
+
+    const from = {
+        opacity: open ? 0 : 1,
+        transform: open ? transitionState : restState,
+    };
+
+    const to = {
+        opacity: !open ? 0 : 1,
+        transform: !open ? transitionState : restState,
+    };
+
     return (
-            <div className={classes.items}>
-                <Trail
-                    config={{ mass: 2, tension: 3000, friction: 150 }}
-                    items={items}
-                    from={{ opacity: 0, transform: "translate3d(0, 100%, 0)" }}
-                    to={{ opacity: 1, transform: "translate3d(0, 0, 0)" }}
-                >
-                    {item => props => <NewPostItem item={item} />}
-                </Trail>
-            </div>
+        <div className={classes.items}>
+            <Trail items={items}
+                   config={{ mass: 2, tension: 3000, friction: 150 }}
+                   from={from}
+                   to={to}
+                   keys={item => item.key}
+            >
+                {(item) => animatedProps => (
+                    <NewPostItem style={animatedProps} item={item} exitHandler={exitHandler}/>
+                )}
+            </Trail>
+        </div>
     );
 }

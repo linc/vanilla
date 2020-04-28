@@ -30,6 +30,7 @@ export interface IAddPost {
 
 export default function NewPostMenu(props: { items: IAddPost[] }) {
     const [open, setOpen] = useState(false);
+    const [firstRun, setFirstRun] = useState(true);
     const animationVars = newPostMenuVariables().animation;
     const animationConfig = { duration: animationVars.time, easing: easings.easeQuadOut };
 
@@ -53,7 +54,7 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
 
     return (
         <>
-            <NewPostItems items={props.items} />
+            <NewPostItems items={props.items} open={open} firstRun={firstRun} exitHandler={() => { setOpen(false) }} />
             <div className={classNames(classes.root)}>
                 <Spring
                     to={
@@ -91,6 +92,7 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
                                         baseClass={ButtonTypes.CUSTOM}
                                         onClick={() => {
                                             setOpen(!open);
+                                            setFirstRun(false);
                                         }}
                                         className={classNames(classes.toggle, {
                                             [classes.isOpen]: open,
@@ -103,8 +105,8 @@ export default function NewPostMenu(props: { items: IAddPost[] }) {
                         );
                     }}
                 </Spring>
-                {/*{open && <NewPostItems {...props} />}*/}
             </div>
+
         </>
     );
 }
