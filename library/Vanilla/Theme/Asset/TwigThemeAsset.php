@@ -4,14 +4,15 @@
  * @license GPL-2.0-only
  */
 
- namespace Vanilla\Theme;
+namespace Vanilla\Theme\Asset;
 
- use Vanilla\Web\TwigRenderTrait;
+use Vanilla\Theme\ThemeAssetFactory;
+use Vanilla\Web\TwigRenderTrait;
 
  /**
   * HTML theme asset.
   */
-class TwigAsset extends Asset {
+class TwigThemeAsset extends HtmlThemeAsset {
 
     use TwigRenderTrait;
 
@@ -19,7 +20,7 @@ class TwigAsset extends Asset {
     private $template = "";
 
     /** @var string Type of asset. */
-    protected $type = "twig";
+    protected $type = "html";
 
     /**
      * Configure the HTML asset.
@@ -28,6 +29,13 @@ class TwigAsset extends Asset {
      */
     public function __construct(string $template) {
         $this->template = $template;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultType(): string {
+        return ThemeAssetFactory::ASSET_TYPE_TWIG;
     }
 
     /**
@@ -50,7 +58,7 @@ class TwigAsset extends Asset {
      *
      * @return string
      */
-    public function renderHtml(array $data): string {
+    public function renderHtml(array $data = []): string {
         return $this->renderTwigFromString($this->getTemplate(), $data);
     }
 
@@ -68,7 +76,7 @@ class TwigAsset extends Asset {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString(): string {
         return $this->getTemplate();
     }
 }

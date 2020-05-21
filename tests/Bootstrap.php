@@ -32,6 +32,7 @@ use Vanilla\Models\SSOModel;
 use Vanilla\Navigation\BreadcrumbModel;
 use Vanilla\SchemaFactory;
 use Vanilla\Site\SiteSectionModel;
+use Vanilla\Theme\FsThemeProvider;
 use Vanilla\Web\UASniffer;
 use Vanilla\Theme\ThemeFeatures;
 use VanillaTests\Fixtures\Authenticator\MockAuthenticator;
@@ -280,8 +281,8 @@ class Bootstrap {
             ->setShared(true)
 
             // File base theme api provider
-            ->rule(\Vanilla\Models\ThemeModel::class)
-            ->addCall("addThemeProvider", [new Reference(\Vanilla\Models\FsThemeProvider::class)])
+            ->rule(\Vanilla\Theme\ThemeService::class)
+            ->addCall("addThemeProvider", [new Reference(FsThemeProvider::class)])
 
             ->rule(SSOModel::class)
             ->setShared(true)
