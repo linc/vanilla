@@ -100,7 +100,7 @@ class LocalesApiController extends Controller {
         $populate = function (array &$row, array $locales) {
             $displayNames = [];
             foreach ($locales as $locale) {
-                $displayName = \Locale::getDisplayLanguage($row["localeKey"], $locale);
+                $displayName = 'English'; //\Locale::getDisplayLanguage($row["localeKey"], $locale);
 
                 // Standardize capitalization
                 $displayName = mb_convert_case($displayName, MB_CASE_TITLE);
